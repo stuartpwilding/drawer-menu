@@ -1,0 +1,61 @@
+/*drawermenu.css*/
+
+
+#button-drawermenu {
+  display: none;
+  cursor: pointer;
+}
+
+#drawermenu {
+  height: 100%;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  background-color: #fff;
+  -webkit-overflow-scrolling: touch;
+}
+
+#drawermenu .content {
+  overflow: hidden;
+}
+
+.menu-closed #drawermenu {
+  width: 0;
+}
+
+.menu-open #drawermenu {
+  overflow-y: auto;
+}
+
+.menu-transition {
+ overflow: hidden;
+}
+
+
+
+/*CUSTOMIZE*/
+
+/*#page-wrap is page wrapper element*/
+.menu-transition #page-wrap {
+  position: relative;
+  z-index: 10;
+}
+.menu-open #page-wrap {
+  position: fixed;
+}
+
+/* set width of open drawermenu*/
+#drawermenu {
+  width: 85%;
+}
+
+/*breakpoint for navigation conversion to drawermenu*/
+@media (max-width: 800px) {
+  .nav-main {
+    display: none;
+  }
+
+  #button-drawermenu {
+    display: block;
+  }
+}
