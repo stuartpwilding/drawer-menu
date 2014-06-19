@@ -4,6 +4,7 @@ var drawerMenu = function(options){
 
   var self = this;
   var $body = $('body');
+  var trans_end = 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend';
 
   defaults = {
     menu : '',
@@ -43,7 +44,6 @@ var drawerMenu = function(options){
       });
     }
     
-
   };
 
   self.status = function() {
@@ -51,7 +51,7 @@ var drawerMenu = function(options){
     var drawermenu_present = $('#drawermenu').length ? true : false;
     if (viewport_small && !drawermenu_present) {
       self.build();
-    } else if ($body.hasClass('menu-open') || $body.hasClass('menu-transition')) {
+    } else if (drawermenu_present && !$body.hasClass('menu-closed')) {
       self.reset();
     }
   };
@@ -69,46 +69,32 @@ var drawerMenu = function(options){
   };
 
   self.open = function() {
-    self.$wrapper.css({
-      'width' : self.$wrapper.outerWidth(),
-      'minHeight' : self.$drawermenu.outerHeight()
+    $body.removeClass('menu-closed').addClass('menu-opening');
+    self.$wrapper.css({'width' : self.$wrapper.outerWidth()})
+    .addClass('move-out')
+    .one(trans_end, function() {
+      $(this).one('click.drawermenu', function() {
+        self.close();
+      });
+      $body.removeClass('menu-opening').addClass('menu-open');
     });
-    $body.removeClass('menu-closed').addClass('menu-transition');
-    self.$wrapper.animate({
-        left: self.distance
-      }, 'fast', function() {
-        $body.removeClass('menu-transition').addClass('menu-open');
-        // close by clicking outside of drawermenu
-        self.$wrapper.one('click.drawermenu', function() {
-          self.close();
-        });
-      }
-    );
   };
 
   self.close = function() {
-    $body.removeClass('menu-open').addClass('menu-transition');
-    self.$wrapper.animate({
-      left: '0'
-    }, 'fast', function() {
-      self.$drawermenu.scrollTop(0);
-      $body.removeClass('menu-transition').addClass('menu-closed');  
-      self.$wrapper.css({
-        'width' : 'auto',
-        'minHeight' : 0,
-      });
-      
+    $body.removeClass('menu-open').addClass('menu-closing');
+    self.$wrapper.removeClass('move-out').addClass('move-back')
+    .one(trans_end, function() {
+      $(this).removeClass('move-back')
+      .css({'width' : 'auto'});
+      $body.removeClass('menu-closing').addClass('menu-closed');
+      self.$drawermenu.scrollTop(0);  
     });
   };
 
   self.reset = function() {
-    $body.removeClass('menu-open menu-transition').addClass('menu-closed');
-    self.$wrapper.stop()
-    .css({
-      'width' : 'auto',
-      'minHeight' : 0,
-      'left' : 'auto'
-    })
+    $body.removeClass('menu-opening menu-open menu-closing').addClass('menu-closed');
+    self.$wrapper.removeClass('move-out move-back')
+    .css({'width' : 'auto'})
     .unbind('click.drawermenu');
     self.$drawermenu.scrollTop(0);
   };

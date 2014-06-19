@@ -11,7 +11,6 @@
   overflow: hidden;
   position: fixed;
   top: 0;
-  background-color: #fff;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -27,24 +26,33 @@
   overflow-y: auto;
 }
 
-.menu-transition {
- overflow: hidden;
-}
 
 
 
 /*CUSTOMIZE*/
 
 /*#page-wrap is page wrapper element*/
-.menu-transition #page-wrap {
+.menu-opening #page-wrap,
+.menu-closing #page-wrap {
   position: relative;
-  z-index: 10;
+  left: 0;
+  transition: left 0.4s ease;
 }
-.menu-open #page-wrap {
+#page-wrap.move-out {
   position: fixed;
+  height: 100%;
+}
+#page-wrap.move-back {
+  position: fixed;
+  height: 100%;
+  left: 0;
 }
 
-/* set width of open drawermenu*/
+
+/*set width of open drawermenu*/
+#page-wrap.move-out {
+  left: 85%;
+}
 #drawermenu {
   width: 85%;
 }
